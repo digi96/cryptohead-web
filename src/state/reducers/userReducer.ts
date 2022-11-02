@@ -1,5 +1,6 @@
 import { ActionType } from "../action-types";
-import { Action, HeadProfile } from "../actions/index";
+import { Action } from "../actions/index";
+import { HeadProfile } from "../interfaces";
 
 const initialState: HeadProfile = {
   userId: 0,

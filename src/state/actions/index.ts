@@ -1,12 +1,5 @@
 import { ActionType } from "../action-types";
-
-export interface HeadProfile {
-  userId: number;
-  address: string;
-  displayName: string;
-  email: string;
-  isEmailVerified: boolean;
-}
+import { HeadProfile } from "../interfaces/index"
 
 interface UpdateProfileAction {
   type: ActionType.UPDATE;
