@@ -1,7 +1,9 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import {useDispatch, useSelector} from "react-redux";
 import {bindActionCreators} from "redux";
 import {actionCreators, State, HeadProfile} from "./state"
+import Header from './components/Header';
 
 function App() {
 
@@ -23,6 +25,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header/>
       <h1>{user.displayName}</h1>
       <button onClick={() => onUpdateUserName("Joseph")}>Joseph</button>
       <button onClick={() => onUpdateUserName("Peter")}>Peter</button>
