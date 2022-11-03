@@ -1,12 +1,15 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {bindActionCreators} from "redux";
 import {actionCreators, State, HeadProfile} from "../state"
 
 
-export default function Home(){
+export default function HomePage(){
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const {updateUser} = bindActionCreators(actionCreators, dispatch);
     const user = useSelector((state: State) => state.user);
@@ -28,7 +31,12 @@ export default function Home(){
              <h1>{user.displayName}</h1>
       <button onClick={() => onUpdateUserName("Joseph")}>Joseph</button>
       <button onClick={() => onUpdateUserName("Peter")}>Peter</button>
-        </div>
+      <br/>
+      <br/>
+      <button onClick={()=> {navigate('/about/2')}}>About</button>
+      <br/>
+      <Link to="/about">Go to About</Link>
+      </div>
     )
 
 }

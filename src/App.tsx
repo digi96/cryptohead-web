@@ -1,34 +1,24 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import {useDispatch, useSelector} from "react-redux";
-import {bindActionCreators} from "redux";
-import {actionCreators, State, HeadProfile} from "./state"
 import Header from './components/Header';
+import HomePage from './pages/Home';
+import AboutPage from './pages/About';
 
 function App() {
-
-  const dispatch = useDispatch();
-
-  const {updateUser} = bindActionCreators(actionCreators, dispatch);
-  const user = useSelector((state: State) => state.user);
-
-  const onUpdateUserName = (name:string) => {
-    let newUserProfile: HeadProfile ={
-      userId: 1,
-      address: "11111111",
-      displayName: name,
-      email: "guest@digi96.com",
-      isEmailVerified: false
-    }
-    updateUser(newUserProfile);
-  }
 
   return (
     <div className="App">
       <Header/>
-      <h1>{user.displayName}</h1>
-      <button onClick={() => onUpdateUserName("Joseph")}>Joseph</button>
-      <button onClick={() => onUpdateUserName("Peter")}>Peter</button>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="about">
+            <Route index element={<AboutPage/>}/>
+            <Route path=":number" element={<AboutPage/>}/>
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
