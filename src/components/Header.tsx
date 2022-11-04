@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import Metamask from './Metamask';
 //import NavDropdown from 'react-bootstrap/NavDropdown';
 
 
@@ -17,8 +18,9 @@ function Header() {
             <Nav.Link href="#pricing">Store</Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">Connect</Nav.Link>
+            <Metamask/>
           </Nav>
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>)
