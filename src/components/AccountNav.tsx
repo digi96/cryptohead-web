@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 
 
 
-export default function Metamask() {
+export default function AccountNav() {
     const dispatch = useDispatch();
     const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
 
@@ -29,7 +29,7 @@ export default function Metamask() {
 
     }
 
-    const renderMetamask = () => {
+    const renderMenu = () => {
         if(!wallet.connected){
             return (
                 <Button onClick={() => connectToMetamask()}>Connect</Button>
@@ -59,6 +59,6 @@ export default function Metamask() {
         }
     }
 
-    return renderMetamask();
+    return renderMenu();
 
 }
