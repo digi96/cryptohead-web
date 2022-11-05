@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {bindActionCreators} from "redux";
-import {actionCreators, State, HeadProfile} from "../state"
+import {actionCreators, State} from "../state"
 
 
 export default function HomePage(){

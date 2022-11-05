@@ -44,7 +44,7 @@ export const signMessage = async () => {
 
       const recoveredAddr = ethers.utils.recoverAddress(messageToVerify, signature);
       
-      if (from.toLowerCase() == recoveredAddr.toLowerCase()) {
+      if (from.toLowerCase() === recoveredAddr.toLowerCase()) {
         console.log('signature and address are valid.');
         return true;
       } else {
@@ -57,29 +57,42 @@ export const signMessage = async () => {
     }
   };
 
-  export const getWalletInfo = async () => {
+  export const connectMetamask = async () => {
     let walletInfo: WalletInfo;
 
-    if (window.ethereum) {
+    if(window.ethereum){
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accounts = await provider.send("eth_requestAccounts",[]);
       const networkVersion = await window.ethereum.request({
         method: 'net_version',
       });
-       walletInfo = {
+
+      console.log(accounts);
+      walletInfo = {
         netWorkId: networkVersion,
         address: window.ethereum.selectedAddress,
-        isSetMetamask: true
+        connected: true,
+        metamask: true
       }
+
+      
     }else{
-       walletInfo = {
+      walletInfo = {
         netWorkId: 0,
         address: "",
-        isSetMetamask: false
+        connected: false,
+        metamask: false
        }
     }
 
     return walletInfo;
-  };
+  }
 
-  export const checkIfSetMetamask = () => {
-    return window.ethereum;
+  export const addAccountChangeListener = async (callback: Function) => {
+    window.ethereum.on('accountsChanged', (accounts:AccessList) => {
+      console.log(accounts);
+      callback(accounts[0]);
+    });
+
+    
   }

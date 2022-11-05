@@ -1,33 +1,43 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import {ethers} from 'ethers';
 import { Button, NavDropdown } from 'react-bootstrap';
-import { State } from "../state";
+import { actionCreators, State } from "../state";
+import { addAccountChangeListener, connectMetamask } from '../utils/EthersHelper';
+import { useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 
 
-function Metamask() {
-    const [selectedAddress, setSelectedAddress] = useState(null);
+export default function Metamask() {
+    const dispatch = useDispatch();
+    const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
 
     const user = useSelector((state: State) => state.user);
-  
+    const wallet = useSelector((state: State) => state.wallet);
 
+    const accountChangeHandler = async (address:string) => {
+        console.log("address changed,"+ address);
+        const walletInfo:WalletInfo = await connectMetamask();
+        updateWalletInfo(walletInfo);
+    }
+    
     const connectToMetamask = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts",[]);
-        setSelectedAddress(accounts[0]);
+        const walletInfo:WalletInfo = await connectMetamask();
+        updateWalletInfo(walletInfo);
+
+        addAccountChangeListener(accountChangeHandler);
+        //setSelectedAddress(wallet.address);
+
     }
 
     const renderMetamask = () => {
-        if(!selectedAddress){
+        if(!wallet.connected){
             return (
                 <Button onClick={() => connectToMetamask()}>Connect</Button>
             );
         }else{
-            var address = new String(selectedAddress);
             return (
                 <NavDropdown title="Connected" id="collasible-nav-dropdown">
-                    <NavDropdown.Item>{address.substring(0,9)+".."}</NavDropdown.Item>
+                    <NavDropdown.Item>{wallet.address.substring(0,9)+".."}</NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.2">
                         {user.displayName} (Head)
                     </NavDropdown.Item>
@@ -52,5 +62,3 @@ function Metamask() {
     return renderMetamask();
 
 }
-
-export default Metamask;

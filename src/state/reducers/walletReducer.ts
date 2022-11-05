@@ -4,7 +4,8 @@ import { Action } from "../actions";
 const initialState: WalletInfo = {
     netWorkId: 0,
     address: "",
-    isSetMetamask: false
+    connected: false,
+    metamask: false
 }
 
 const walletReducer = (state: WalletInfo = initialState, action: Action) => {

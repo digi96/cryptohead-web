@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Bytes, ethers } from "ethers";
+import { AccessList } from 'ethers/lib/utils';
 
 
 const useEthersSet = () => {
     const [isSetMetamask, setIsSetMetamask] = useState(false);
     const [networkID, setNetworkID] = useState(0);
-    const [address, setAddress] = useState(null);
+    const [address, setAddress] = useState<string | null>();
 
     const signMessage = async () => {
        
@@ -89,9 +90,9 @@ const useEthersSet = () => {
             setNetworkID(nv10);
           });
     
-          window.ethereum.on('accountsChanged', (accounts:any) => {
+          window.ethereum.on('accountsChanged', (accounts:AccessList) => {
             if (accounts.length > 0) {
-              setAddress(accounts[0]);
+              setAddress(accounts[0].address);
             } else {
               setAddress(null);
             }
