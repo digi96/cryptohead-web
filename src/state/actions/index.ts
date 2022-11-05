@@ -1,9 +1,14 @@
 import { ActionType } from "../action-types";
-import { HeadProfile } from "../interfaces/index"
+
 
 interface UpdateProfileAction {
-  type: ActionType.UPDATE;
+  type: ActionType.UPDATE_HEAD_PROFILE;
   payload: HeadProfile;
 }
 
-export type Action = UpdateProfileAction;
+interface UpdateWalletInfoAction {
+  type: ActionType.UPDATE_WALLET_IFNO;
+  payload: WalletInfo
+}
+
+export type Action = UpdateProfileAction | UpdateWalletInfoAction;

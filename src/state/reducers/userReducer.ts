@@ -1,6 +1,5 @@
 import { ActionType } from "../action-types";
 import { Action } from "../actions/index";
-import { HeadProfile } from "../interfaces";
 
 const initialState: HeadProfile = {
   userId: 0,
@@ -12,7 +11,7 @@ const initialState: HeadProfile = {
 
 const userReducer = (state: HeadProfile = initialState, action: Action) => {
   switch (action.type) {
-    case ActionType.UPDATE:
+    case ActionType.UPDATE_HEAD_PROFILE:
       return (state = action.payload);
     default:
       return state;
