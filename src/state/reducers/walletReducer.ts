@@ -3,9 +3,7 @@ import { Action } from "../actions";
 
 const initialState: WalletInfo = {
     netWorkId: 0,
-    address: "",
-    connected: false,
-    metamask: false
+    address: null,
 }
 
 const walletReducer = (state: WalletInfo = initialState, action: Action) => {

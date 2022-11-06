@@ -14,7 +14,5 @@ interface HeadProfile {
 
 interface WalletInfo {
   netWorkId: number,
-  address: string,
-  connected: boolean
-  metamask: boolean
+  address: string | null,
 }

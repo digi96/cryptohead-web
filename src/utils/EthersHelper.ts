@@ -1,5 +1,4 @@
 import { Bytes, ethers } from "ethers";
-import { AccessList } from 'ethers/lib/utils';
 
 export const signMessage = async () => {
        
@@ -56,43 +55,3 @@ export const signMessage = async () => {
       return false;
     }
   };
-
-  export const connectMetamask = async () => {
-    let walletInfo: WalletInfo;
-
-    if(window.ethereum){
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts",[]);
-      const networkVersion = await window.ethereum.request({
-        method: 'net_version',
-      });
-
-      console.log(accounts);
-      walletInfo = {
-        netWorkId: networkVersion,
-        address: window.ethereum.selectedAddress,
-        connected: true,
-        metamask: true
-      }
-
-      
-    }else{
-      walletInfo = {
-        netWorkId: 0,
-        address: "",
-        connected: false,
-        metamask: false
-       }
-    }
-
-    return walletInfo;
-  }
-
-  export const addAccountChangeListener = async (callback: Function) => {
-    window.ethereum.on('accountsChanged', (accounts:AccessList) => {
-      console.log(accounts);
-      callback(accounts[0]);
-    });
-
-    
-  }
