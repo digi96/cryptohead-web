@@ -15,4 +15,6 @@ interface HeadProfile {
 interface WalletInfo {
   netWorkId: number,
   address: string | null,
+  signedMessage: string | null,
+  loggedIn: boolean
 }

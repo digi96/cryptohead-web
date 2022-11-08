@@ -4,6 +4,8 @@ import { Action } from "../actions";
 const initialState: WalletInfo = {
     netWorkId: 0,
     address: null,
+    signedMessage: null,
+    loggedIn: false
 }
 
 const walletReducer = (state: WalletInfo = initialState, action: Action) => {

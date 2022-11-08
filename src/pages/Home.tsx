@@ -38,9 +38,15 @@ export default function HomePage(){
           </>
         )
       }
+
+      const goSignIn = () => {
+        console.log("signIn...");
+        signIn();
+      }
+
       return (
         <div>
-          <button onClick={() => signIn()}>{!isLoggedIn ? 'Sign in' : 'Sign in again'}</button>
+          <button onClick={goSignIn}>{!isLoggedIn ? 'Sign in' : 'Sign in again'}</button>
           &nbsp;
           <button disabled={!isLoggedIn} onClick={signOut}>
             Sign out

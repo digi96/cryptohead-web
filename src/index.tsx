@@ -5,9 +5,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './state/index'
 import reportWebVitals from './reportWebVitals';
-import { DAppProvider, useEtherBalance, useEthers, Config, Polygon, Mumbai } from '@usedapp/core'
-import { getDefaultProvider } from 'ethers';
-import { SiweProvider, useSiwe } from '@usedapp/siwe';
+import { DAppProvider, Config } from '@usedapp/core'
 
 const config: Config = {
   //readOnlyChainId: Mumbai.chainId,
@@ -19,11 +17,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <DAppProvider config = {config}>
-      <SiweProvider backendUrl={'http://localhost:3000'}>
-    <Provider store={store}>
-      <App />
-    </Provider>
-    </SiweProvider>
+        <Provider store={store}>
+          <App />
+        </Provider>
     </DAppProvider>
   </React.StrictMode>
 );

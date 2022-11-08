@@ -22,6 +22,8 @@ export default function AccountNav() {
             const walletInfo:WalletInfo = {
                 netWorkId: chainId? chainId:0,
                 address: account,
+                signedMessage: null,
+                loggedIn: false
             }
 
             updateWalletInfo(walletInfo);
