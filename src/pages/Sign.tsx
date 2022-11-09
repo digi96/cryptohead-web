@@ -7,6 +7,7 @@ import {actionCreators, State} from "../state"
 import { bindActionCreators } from "redux";
 import { useEthers } from "@usedapp/core";
 import axios, { AxiosRequestConfig } from "axios";
+import { getNonce } from "../service/FastifySiweService";
 
 const domain = window.location.host;
 const origin = window.location.origin;
@@ -23,37 +24,24 @@ export default function Sign(){
 
 
 const signInWithEthereum = async () => {
-    
-    const nowDateString:string = new Date().toISOString();
 
-    const address = await signer.getAddress();
-
-    const statement = 'Sign in with Ethereum to the app.';
-    
-    const message = new SiweMessage({
+  //here to get nonce from backend
+  const newNonce = await getNonce();
+  const nowDateString:string = new Date().toISOString();
+  const address = await signer.getAddress();
+  const statement = 'Sign in with Ethereum to the app.';
+  const jsonObj = {
       domain,
       address,
       statement,
       uri: origin,
       version: '1',
       chainId: 1,
-      nonce: "UC2HszhC2IBBll90p",
+      nonce: newNonce,
       issuedAt: nowDateString
-  });
+    };
     
-    //console.log("to message,"+ message.toMessage());
-    const jsonObj = {
-      domain,
-      address,
-      statement,
-      uri: origin,
-      version: '1',
-      chainId: 1,
-      nonce: "UC2HszhC2IBBll90p",
-      issuedAt: nowDateString
-  };
-  
-  
+  const message = new SiweMessage(jsonObj);
   const signedMessage: string = await signer.signMessage(message.prepareMessage());
   console.log(signedMessage);
 
