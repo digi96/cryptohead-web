@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ethers } from "ethers";
 import { SiweMessage } from "siwe";
@@ -7,7 +7,7 @@ import {actionCreators, State} from "../state"
 import { bindActionCreators } from "redux";
 import { useEthers } from "@usedapp/core";
 import axios, { AxiosRequestConfig } from "axios";
-import { getNonce } from "../service/FastifySiweService";
+import { getNonce, verifySignedMessage } from "../service/FastifySiweService";
 
 const domain = window.location.host;
 const origin = window.location.origin;
@@ -16,89 +16,81 @@ const signer = provider.getSigner();
 
 export default function Sign(){  
   const { account, chainId } = useEthers();
+  const [ status, setStatus ] = useState<string>("");
+  const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const dispatch = useDispatch();
   
-
   const { updateWalletInfo } = bindActionCreators(actionCreators, dispatch);
   const walletInfo = useSelector((state: State) => state.wallet);
 
 
-const signInWithEthereum = async () => {
+  const signInWithEthereum = async () => {
 
-  //here to get nonce from backend
-  const newNonce = await getNonce();
-  const nowDateString:string = new Date().toISOString();
-  const address = await signer.getAddress();
-  const statement = 'Sign in with Ethereum to the app.';
-  const jsonObj = {
-      domain,
-      address,
-      statement,
-      uri: origin,
-      version: '1',
-      chainId: 1,
-      nonce: newNonce,
-      issuedAt: nowDateString
-    };
-    
-  const message = new SiweMessage(jsonObj);
-  const signedMessage: string = await signer.signMessage(message.prepareMessage());
-  console.log(signedMessage);
+    if(!account){
+      return;
+    }
 
-  const objToEncode = {
-    "signature": signedMessage,
-    "message": jsonObj
-  }
+    setStatus("Signing...");
+    setIsLoading(true);
 
-  if(account){
+    //here to get nonce from backend
+    const newNonce = await getNonce();
+    const nowDateString:string = new Date().toISOString();
+    const address = await signer.getAddress();
+    const statement = 'Sign in with Ethereum to the app.';
+    const jsonObj = {
+        domain,
+        address,
+        statement,
+        uri: origin,
+        version: '1',
+        chainId: 1,
+        nonce: newNonce,
+        issuedAt: nowDateString
+      };
+      
+    const message = new SiweMessage(jsonObj);
+    const signedMessage: string = await signer.signMessage(message.prepareMessage());
+    console.log(signedMessage);
+
+    const objToEncode = {
+      "signature": signedMessage,
+      "message": jsonObj
+    }
+
     let newWalletInfo: WalletInfo = {
-      netWorkId: chainId? chainId:0,
-      address: account,
-      signedMessage: JSON.stringify(objToEncode), 
-      loggedIn: false
+        netWorkId: chainId? chainId:0,
+        address: account,
+        signedMessage: JSON.stringify(objToEncode), 
+        loggedIn: false
     }
 
-    updateWalletInfo(newWalletInfo);
-  }
+    const loggedIn = await verifySignedMessage(JSON.stringify(objToEncode));
 
-  
-}
+    if(loggedIn){
+      newWalletInfo.loggedIn = true;
+      updateWalletInfo(newWalletInfo);
+      setStatus("Logged in.");
+    }else{
+      setStatus("Log failed.")
+    }
 
-const signIn =async () => {
-  try{
+    setIsLoading(false);
     
-    const axiosConfig:AxiosRequestConfig = {
-      method: 'GET',
-      url: '/siwe/me',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${walletInfo.signedMessage}`
-      }
-    }
-
-    const { data } = await axios(axiosConfig);
-
-  console.log(JSON.stringify(data, null, 4));
-
-  if(data.loggedIn){
-    let newWalletInfo: WalletInfo = {
-      ...walletInfo,
-      loggedIn: true
-    }
-    updateWalletInfo(newWalletInfo);
   }
-  }catch(error){
-    console.log(error);
-  }
-}
+
+  useEffect(()=>{
+    if(walletInfo.loggedIn){
+      setStatus("Logged in.");
+    }
+  },[]);
 
 
-return (
+  return (
     <>
       <div>
-        {!walletInfo.signedMessage && <Button onClick={signInWithEthereum}>Sign Message</Button>}
-        {(walletInfo.signedMessage && !walletInfo.loggedIn)  && <Button onClick={signIn}>Login</Button>}
-        {walletInfo.loggedIn && <p>You are logged in.</p>}
+        <p>{status}</p>
+        {(!walletInfo.loggedIn && !isLoading) && <Button onClick={signInWithEthereum}>Sign Message To Login</Button>}
       </div>
     </>
   )
