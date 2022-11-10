@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Header from './layouts/Header';
 import HomePage from './pages/Home';
@@ -11,8 +11,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header/>
-      <BrowserRouter>
+        <Header/>
         <Routes>
           <Route path="/" element={<HomePage/>}/>
           <Route path="about">
@@ -22,7 +21,6 @@ function App() {
           <Route path="/sign" element={<Sign/>}/>
           <Route path="/profile" element={<ProfilePage/>}/>
         </Routes>
-      </BrowserRouter>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { actionCreators, State } from "../state";
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {useEthers} from '@usedapp/core';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -16,7 +16,9 @@ export default function AccountNav() {
 
     const user = useSelector((state: State) => state.user);
     const wallet = useSelector((state: State) => state.wallet);
+    const history = useNavigate();
 
+    console.log(account);
     
 
     // useEffect(()=>{
@@ -46,43 +48,48 @@ export default function AccountNav() {
         if(wallet.loggedIn){
             return (
                 <>
-                <Link to="/profile">
-                    <NavDropdown.Item href="#">
+                    <NavDropdown.Item href="#" onClick={()=> history('/profile')}>
                         Profile
                     </NavDropdown.Item>
-                </Link>
                 </>
             )
         }else{
             return (
             <>
-                <Link to="/sign">
-                    <NavDropdown.Item href="#">Sign To Login</NavDropdown.Item>
-                </Link>
+                
+                <NavDropdown.Item href="#" onClick={()=> history('/sign')}>Sign To Login</NavDropdown.Item>
+                
             </>
             );
         }
+    }
+
+    const renderMainMenu = () => {
+
+        return (
+        <>
+            <NavDropdown title="Connected" id="collasible-nav-dropdown">
+                        <NavDropdown.Item>{account?.substring(0,9)+".."}</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.2">
+                            {user.displayName} (Head)
+                        </NavDropdown.Item>
+                    {renderLoggedInMenu()}
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="#action/3.4">
+                            My Cards
+                        </NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.4">
+                            My Tempates
+                        </NavDropdown.Item>
+            </NavDropdown>
+        </>
+        )
     }
         
     return (
         <>
           {!account && <Button onClick={()=> activateBrowserWallet({type: 'metamask'})}> Connect </Button>}
-          if(account){
-                <NavDropdown title="Connected" id="collasible-nav-dropdown">
-                    <NavDropdown.Item>{wallet.address?.substring(0,9)+".."}</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                        {user.displayName} (Head)
-                    </NavDropdown.Item>
-                   {renderLoggedInMenu()}
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="#action/3.4">
-                        My Cards
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.4">
-                        My Tempates
-                    </NavDropdown.Item>
-                </NavDropdown>
-          }
+          {account && renderMainMenu()}
         
         </>
       )

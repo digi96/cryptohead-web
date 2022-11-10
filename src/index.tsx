@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { store } from './state/index'
 import reportWebVitals from './reportWebVitals';
 import { DAppProvider, Config } from '@usedapp/core'
+import { BrowserRouter } from 'react-router-dom';
 
 const config: Config = {
   //readOnlyChainId: Mumbai.chainId,
@@ -16,11 +17,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <BrowserRouter>
     <DAppProvider config = {config}>
         <Provider store={store}>
           <App />
         </Provider>
     </DAppProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
