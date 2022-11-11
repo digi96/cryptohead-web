@@ -3,14 +3,15 @@ import { Button, NavDropdown } from 'react-bootstrap';
 import { actionCreators, State } from "../state";
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {useEthers} from '@usedapp/core';
+import { Hardhat, useEthers} from '@usedapp/core';
 import { useNavigate } from 'react-router-dom';
 
 
 
-export default function AccountNav() {
 
-    const { activateBrowserWallet, account, chainId } = useEthers();
+
+export default function AccountNav() {
+    const { activateBrowserWallet, account, chainId, deactivate, switchNetwork} = useEthers();
     const dispatch = useDispatch();
     const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
 
@@ -64,6 +65,29 @@ export default function AccountNav() {
         }
     }
 
+    const renderDisconnectMenu = () => {
+        if(account){
+            if(chainId === Hardhat.chainId){
+                return (
+                    <>
+                    <NavDropdown.Item onClick={deactivate}>
+                        Disconnect
+                    </NavDropdown.Item>
+                    </>
+                );
+            }else{
+                return (
+                    <>
+                    <p>Wrong netword</p>
+                    <Button onClick={() => switchNetwork(Hardhat.chainId)}>Switch Network</Button>
+                    </>);
+                
+            }
+        }else{
+            return <Button onClick={activateBrowserWallet}>Connect Wallet</Button>
+        }
+    }
+
     const renderMainMenu = () => {
 
         return (
@@ -81,6 +105,10 @@ export default function AccountNav() {
                         <NavDropdown.Item href="#action/3.4">
                             My Tempates
                         </NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        {renderDisconnectMenu()}
+                        
+
             </NavDropdown>
         </>
         )
@@ -88,7 +116,7 @@ export default function AccountNav() {
         
     return (
         <>
-          {!account && <Button onClick={()=> activateBrowserWallet({type: 'metamask'})}> Connect </Button>}
+          {!account && <Button onClick={activateBrowserWallet}>Connect Wallet</Button>}
           {account && renderMainMenu()}
         
         </>

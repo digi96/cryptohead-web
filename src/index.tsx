@@ -5,11 +5,14 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './state/index'
 import reportWebVitals from './reportWebVitals';
-import { DAppProvider, Config } from '@usedapp/core'
+import { DAppProvider, Config, Hardhat } from '@usedapp/core'
 import { BrowserRouter } from 'react-router-dom';
 
 const config: Config = {
-  //readOnlyChainId: Mumbai.chainId,
+  readOnlyChainId: Hardhat.chainId,
+  readOnlyUrls: {
+    [Hardhat.chainId]: "http://127.0.0.1:8545"
+  }
 }
 
 const root = ReactDOM.createRoot(
