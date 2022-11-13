@@ -1,13 +1,15 @@
 import { Button } from "react-bootstrap"
 import { useEthers } from "@usedapp/core";
-import { useCreateHeadProfile } from "../hooks/CreateHeadProfile"
+import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
 import { useState, useEffect } from "react";
 import { BigNumber } from "ethers";
+
 
 export default function ProfilePage(){
     const [status, setStatus] = useState("");
     const { account } = useEthers();
     const { loading, success, error, send } = useCreateHeadProfile();
+    const { displayName, email, isEmailVerified} = useGetHeadProfile();
 
     useEffect(()=>{
 
@@ -18,6 +20,11 @@ export default function ProfilePage(){
         if(success){
             setStatus("Succeed.");
         }
+
+        if(displayName!==""){
+            setStatus(displayName);
+        }
+
     },[success, loading])
 
     const onCreateHeadProfileClick = async () => {

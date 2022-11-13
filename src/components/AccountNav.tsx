@@ -19,7 +19,7 @@ export default function AccountNav() {
     const wallet = useSelector((state: State) => state.wallet);
     const history = useNavigate();
 
-    console.log(account);
+    //console.log(account);
     
 
     // useEffect(()=>{

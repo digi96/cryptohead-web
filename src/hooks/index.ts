@@ -1,8 +1,7 @@
 import { Contract } from "ethers";
 import { Interface } from "ethers/lib/utils";
 import { headProfileAbi } from "../abi/HeadProfile"
+import env from "ts-react-dotenv";
 
-const contractAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
-const ABI = new Interface(headProfileAbi);
-
-export const headProfileContract = new Contract(contractAddress, ABI);
+export const headProfileABI = new Interface(headProfileAbi);
+export const headProfileContract = new Contract(env.APP_CONTRACT_HEADPROFILE_ADDRESS, headProfileABI);

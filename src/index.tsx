@@ -12,7 +12,8 @@ const config: Config = {
   readOnlyChainId: Hardhat.chainId,
   readOnlyUrls: {
     [Hardhat.chainId]: "http://127.0.0.1:8545"
-  }
+  },
+  gasLimitBufferPercentage: 10,
 }
 
 const root = ReactDOM.createRoot(
