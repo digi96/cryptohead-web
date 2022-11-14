@@ -1,33 +1,30 @@
-import { useCall } from "@usedapp/core";
+import { useEffect, useState } from "react";
 import { headProfileContract } from "..";
+import { useMetaMask } from "metamask-react";
 
 export const useGetHeadProfile = () => {
-  const { value , error } = useCall({
-    contract: headProfileContract,
-    method: 'getProfileInfo',
-    args: []
-  }) ?? {};
+  const [profile, setProfile] = useState<HeadProfile>();
+  const { account } = useMetaMask();
 
-
-  let displayName:string = "";
-  let email:string = "";
-  let isEmailVerified:boolean = false;
-
-  if(error){
-    console.log(error);
-  }else{
-    console.log(value);
-    if(value){
-      displayName = value[2];
-    email = value[3];
-    isEmailVerified = value[4];
+  useEffect(() => {
+    if (account) {
+      console.log("getting profile.....");
+      headProfileContract.getProfileInfo().then((result: any) => {
+        console.log(result);
+        if (result) {
+          setProfile({
+            userId: result[0],
+            address: account!,
+            displayName: result[2],
+            email: result[3],
+            isEmailVerified: result[4],
+          });
+        }
+      });
     }
-    
-  }
+  }, [account]);
 
   return {
-    displayName,
-    email,
-    isEmailVerified
-  }
-}
+    profile,
+  };
+};

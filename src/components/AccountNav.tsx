@@ -3,15 +3,12 @@ import { Button, NavDropdown } from 'react-bootstrap';
 import { actionCreators, State } from "../state";
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Hardhat, useEthers} from '@usedapp/core';
 import { useNavigate } from 'react-router-dom';
-
-
-
+import { useMetaMask } from 'metamask-react';
 
 
 export default function AccountNav() {
-    const { activateBrowserWallet, account, chainId, deactivate, switchNetwork} = useEthers();
+    const { status, connect, account, chainId, ethereum, switchChain } = useMetaMask();
     const dispatch = useDispatch();
     const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
 
@@ -66,11 +63,11 @@ export default function AccountNav() {
     }
 
     const renderDisconnectMenu = () => {
-        if(account){
-            if(chainId === Hardhat.chainId){
+        if(status === "connected"){
+            if(chainId === "0x13881"){
                 return (
                     <>
-                    <NavDropdown.Item onClick={deactivate}>
+                    <NavDropdown.Item>
                         Disconnect
                     </NavDropdown.Item>
                     </>
@@ -79,12 +76,10 @@ export default function AccountNav() {
                 return (
                     <>
                     <p>Wrong netword</p>
-                    <Button onClick={() => switchNetwork(Hardhat.chainId)}>Switch Network</Button>
+                    <Button onClick={() => switchChain("0x13881")}>Switch Network</Button>
                     </>);
                 
             }
-        }else{
-            return <Button onClick={activateBrowserWallet}>Connect Wallet</Button>
         }
     }
 
@@ -95,9 +90,9 @@ export default function AccountNav() {
             <NavDropdown title="Connected" id="collasible-nav-dropdown">
                         <NavDropdown.Item>{account?.substring(0,9)+".."}</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">
-                            {user.displayName} (Head)
+                        {user.displayName} (Head)
                         </NavDropdown.Item>
-                    {renderLoggedInMenu()}
+                        {renderLoggedInMenu()}
                         <NavDropdown.Divider />
                         <NavDropdown.Item href="#action/3.4">
                             My Cards
@@ -116,7 +111,7 @@ export default function AccountNav() {
         
     return (
         <>
-          {!account && <Button onClick={activateBrowserWallet}>Connect Wallet</Button>}
+          {!account && <Button onClick={connect}>Connect Wallet</Button>}
           {account && renderMainMenu()}
         
         </>

@@ -5,16 +5,9 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { store } from './state/index'
 import reportWebVitals from './reportWebVitals';
-import { DAppProvider, Config, Hardhat } from '@usedapp/core'
+import { MetaMaskProvider } from 'metamask-react';
 import { BrowserRouter } from 'react-router-dom';
 
-const config: Config = {
-  readOnlyChainId: Hardhat.chainId,
-  readOnlyUrls: {
-    [Hardhat.chainId]: "http://127.0.0.1:8545"
-  },
-  gasLimitBufferPercentage: 10,
-}
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -22,11 +15,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <DAppProvider config = {config}>
+    <MetaMaskProvider>
         <Provider store={store}>
           <App />
         </Provider>
-    </DAppProvider>
+    </MetaMaskProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

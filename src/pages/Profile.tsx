@@ -1,43 +1,43 @@
 import { Button } from "react-bootstrap"
-import { useEthers } from "@usedapp/core";
 import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
 import { useState, useEffect } from "react";
 import { BigNumber } from "ethers";
+import { useMetaMask } from 'metamask-react';
 
 
 export default function ProfilePage(){
     const [status, setStatus] = useState("");
-    const { account } = useEthers();
-    const { loading, success, error, send } = useCreateHeadProfile();
-    const { displayName, email, isEmailVerified} = useGetHeadProfile();
+    const { account } = useMetaMask();
+    //const { loading, success, error, send } = useCreateHeadProfile();
+    const { send } = useCreateHeadProfile(account!);
+    const { profile } = useGetHeadProfile();
 
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        if(loading){
-            setStatus("loading...");
-        }
+    //     if(loading){
+    //         setStatus("loading...");
+    //     }
         
-        if(success){
-            setStatus("Succeed.");
-        }
+    //     if(success){
+    //         setStatus("Succeed.");
+    //     }
 
-        if(displayName!==""){
-            setStatus(displayName);
-        }
-
-    },[success, loading])
+    // },[success, loading])
 
     const onCreateHeadProfileClick = async () => {
-        await send([BigNumber.from(0),
-            1,account,"Bevis Lin","bevis.tw@gmail.com",false,BigNumber.from("1655445559"),0]);
+        console.log('ddddd');
+        // await send([BigNumber.from(0),
+        //     1,account,"Bevis Lin","bevis.tw@gmail.com",false,BigNumber.from("1655445559"),0]);
+        send();
 
     }
-
+ 
     return (
         <div>
         <p>Profile Page</p>
-        <Button onClick={onCreateHeadProfileClick}>Create Profile</Button>
+        {!profile && <Button onClick={onCreateHeadProfileClick}>Create Profile</Button>}
         <p>{status}</p>
+        {profile && <p>{profile!.displayName}</p>}
         </div>
     )
 }

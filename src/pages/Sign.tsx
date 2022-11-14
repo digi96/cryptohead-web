@@ -5,9 +5,9 @@ import { SiweMessage } from "siwe";
 import { Button } from "react-bootstrap";
 import {actionCreators, State} from "../state"
 import { bindActionCreators } from "redux";
-import { useEthers } from "@usedapp/core";
 import axios, { AxiosRequestConfig } from "axios";
 import { getNonce, verifySignedMessage } from "../service/FastifySiweService";
+import { useMetaMask } from 'metamask-react';
 
 const domain = window.location.host;
 const origin = window.location.origin;
@@ -15,7 +15,7 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 const signer = provider.getSigner();
 
 export default function Sign(){  
-  const { account, chainId } = useEthers();
+  const { account, chainId } = useMetaMask();
   const [ status, setStatus ] = useState<string>("");
   const [ isLoading, setIsLoading ] = useState<boolean>(false);
   const dispatch = useDispatch();
@@ -59,7 +59,7 @@ export default function Sign(){
     }
 
     let newWalletInfo: WalletInfo = {
-        netWorkId: chainId? chainId:0,
+        netWorkId: chainId? parseInt(chainId):0,
         address: account,
         signedMessage: JSON.stringify(objToEncode), 
         loggedIn: false
