@@ -1,48 +1,28 @@
+import { State } from "../state";
 import { useSelector } from 'react-redux';
-import { Button, NavDropdown } from 'react-bootstrap';
-import { actionCreators, State } from "../state";
-import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { useMetaMask } from 'metamask-react';
-import { useGetHeadProfile } from '../hooks/HeadProfile';
-
+import { Button, NavDropdown } from 'react-bootstrap';
+import { useEffect } from "react";
+import { useGetHeadProfile } from "../hooks/HeadProfile";
 
 export default function AccountNav() {
     const { status, connect, account, chainId, ethereum, switchChain } = useMetaMask();
-    const dispatch = useDispatch();
-    const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
-    const { profile } = useGetHeadProfile();
-
+    
     const user = useSelector((state: State) => state.user);
     const wallet = useSelector((state: State) => state.wallet);
+    const {retrieveData: getProfileFromContract } = useGetHeadProfile();
     const history = useNavigate();
 
-    //console.log(account);
-    
+    useEffect(()=>{
+        if(account){
+            console.log(user);
+            if(user.userId == 0 || user.address !=account){
+                getProfileFromContract();
+            }
+        }
 
-    // useEffect(()=>{
-    //     if(account){
-
-    //         console.log(account);
-    //         console.log(wallet.address);
-
-    //         if(account === wallet.address){
-    //             console.log("address unchanged...");
-    //         }else{
-    //             console.log("updating wallet info...");
-    //             const walletInfo:WalletInfo = {
-    //                 netWorkId: chainId? chainId:0,
-    //                 address: account,
-    //                 signedMessage: null,
-    //                 loggedIn: false
-    //             }
-    
-    //             updateWalletInfo(walletInfo);
-    //         }
-            
-    //     }
-    // },[account]);
+    },[account])
 
     const renderLoggedInMenu = () => {
         if(wallet.loggedIn){

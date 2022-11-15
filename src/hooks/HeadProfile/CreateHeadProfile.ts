@@ -4,6 +4,7 @@ import { headProfileContract } from "..";
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators, State } from "../../state";
+import { useGetHeadProfile } from "./GetHeadProfile";
 
 export const useCreateHeadProfile = (address: string) => {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,7 @@ export const useCreateHeadProfile = (address: string) => {
   const [error, setError] = useState<any>();
   const dispatch = useDispatch();
   const { updateUser } = bindActionCreators(actionCreators, dispatch);
+  const { retrieveData } = useGetHeadProfile();
 
   const send = async (profile: HeadProfileCreation) => {
     console.log("sending create profile......");
@@ -30,6 +32,7 @@ export const useCreateHeadProfile = (address: string) => {
           isEmailVerified: false,
         };
         updateUser(newUser);
+        retrieveData();
       });
     } catch (err) {
       setLoading(false);

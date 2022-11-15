@@ -14,7 +14,7 @@ export default function ProfilePage(){
     const { account } = useMetaMask();
     //const { loading, success, error, send } = useCreateHeadProfile();
     const { send,loading, success, error } = useCreateHeadProfile(account!);
-    const { profile } = useGetHeadProfile();
+    const { user } = useGetHeadProfile();
 
     // useEffect(()=>{
 
@@ -73,9 +73,9 @@ export default function ProfilePage(){
     return (
         <div>
         <p>Profile Page</p>
-        {!profile && renderCreateProfileForm()}
+        {user.userId == 0 && renderCreateProfileForm()}
         <p>{status}</p>
-        {profile && <p>{profile!.displayName}</p>}
+        {user.userId != 0 && <p>{user!.displayName}</p>}
         {loading && <p>Creating profile...</p>}
         {success && <p>Profile created.</p>}
         {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
