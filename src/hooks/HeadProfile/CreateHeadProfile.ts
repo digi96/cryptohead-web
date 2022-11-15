@@ -7,19 +7,8 @@ export const useCreateHeadProfile = (address: string) => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<any>();
 
-  const send = async () => {
+  const send = async (profile: HeadProfileCreation) => {
     console.log("sending create profile......");
-    const profile = {
-      userId: 0,
-      userType: 1,
-      userAddress: address,
-      displayName: "Bevis Lin2",
-      email: "bevis.tw@gmail.com",
-      isEmailVerified: false,
-      lastUpdate: "1655445559",
-      emailVerifyNumber: 0,
-    };
-
     try {
       setLoading(true);
       const tx = await headProfileContract.createProfile(profile);

@@ -5,12 +5,14 @@ import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { useNavigate } from 'react-router-dom';
 import { useMetaMask } from 'metamask-react';
+import { useGetHeadProfile } from '../hooks/HeadProfile';
 
 
 export default function AccountNav() {
     const { status, connect, account, chainId, ethereum, switchChain } = useMetaMask();
     const dispatch = useDispatch();
     const {updateWalletInfo} = bindActionCreators(actionCreators, dispatch);  
+    const { profile } = useGetHeadProfile();
 
     const user = useSelector((state: State) => state.user);
     const wallet = useSelector((state: State) => state.wallet);
