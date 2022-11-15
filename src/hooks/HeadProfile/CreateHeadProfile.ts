@@ -1,11 +1,16 @@
 import { ethers } from "ethers";
 import { useState } from "react";
 import { headProfileContract } from "..";
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators, State } from "../../state";
 
 export const useCreateHeadProfile = (address: string) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<any>();
+  const dispatch = useDispatch();
+  const { updateUser } = bindActionCreators(actionCreators, dispatch);
 
   const send = async (profile: HeadProfileCreation) => {
     console.log("sending create profile......");
@@ -16,6 +21,15 @@ export const useCreateHeadProfile = (address: string) => {
         console.log(receipt);
         setLoading(false);
         setSuccess(true);
+
+        let newUser: HeadProfile = {
+          userId: 0,
+          address: profile.userAddress,
+          displayName: profile.displayName,
+          email: profile.email,
+          isEmailVerified: false,
+        };
+        updateUser(newUser);
       });
     } catch (err) {
       setLoading(false);

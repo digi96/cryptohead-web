@@ -27,27 +27,10 @@ export default function ProfilePage(){
     //     }
 
     // },[success, loading])
+    
+    const handleSubmit = async (event:any) => {
+        event.preventDefault();
 
-
-    const renderCreateProfileForm = () => {
-        return (
-            <>
-                <Form>
-                    <Form.Group>
-                        <Form.Label>Display Name</Form.Label>
-                        <Form.Control type="text" placeholder="Enter your name" value={displayName}/>
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" placeholder="Enter your email" value={email}/>
-                    </Form.Group>
-                    <Button variant="primay" type="submit" onClick={onCreateHeadProfileClick}>
-                        Create Profile
-                    </Button>
-                </Form>
-            </>
-        );
-    }
-
-    const onCreateHeadProfileClick = async () => {
         const profile: HeadProfileCreation = {
             userId: 0,
             userType: 1,
@@ -63,6 +46,27 @@ export default function ProfilePage(){
         send(profile);
 
     }
+
+
+    const renderCreateProfileForm = () => {
+        return (
+            <>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                        <Form.Label>Display Name</Form.Label>
+                        <Form.Control type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}/>
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" value={email} onChange={(e)=> setEmail(e.target.value)}/>
+                    </Form.Group>
+                    <Button type="submit">
+                        Create Profile
+                    </Button>
+                </Form>
+            </>
+        );
+    }
+
+    
 
 
  
