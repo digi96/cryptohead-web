@@ -9,7 +9,7 @@ export default function ProfilePage(){
     const [status, setStatus] = useState("");
     const { account } = useMetaMask();
     //const { loading, success, error, send } = useCreateHeadProfile();
-    const { send } = useCreateHeadProfile(account!);
+    const { send,loading, success, error } = useCreateHeadProfile(account!);
     const { profile } = useGetHeadProfile();
 
     // useEffect(()=>{
@@ -38,6 +38,9 @@ export default function ProfilePage(){
         {!profile && <Button onClick={onCreateHeadProfileClick}>Create Profile</Button>}
         <p>{status}</p>
         {profile && <p>{profile!.displayName}</p>}
+        {loading && <p>Creating profile...</p>}
+        {success && <p>Profile created.</p>}
+        {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
         </div>
     )
 }

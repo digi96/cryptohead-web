@@ -19,8 +19,20 @@ export const useCreateHeadProfile = (address: string) => {
       lastUpdate: "1655445559",
       emailVerifyNumber: 0,
     };
-    const result = await headProfileContract.createProfile(profile);
-    console.log(result);
+
+    try {
+      setLoading(true);
+      const tx = await headProfileContract.createProfile(profile);
+      tx.wait().then(function (receipt: any) {
+        console.log(receipt);
+        setLoading(false);
+        setSuccess(true);
+      });
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+      setError(err);
+    }
   };
 
   return {

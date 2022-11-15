@@ -7,20 +7,29 @@ export const useGetHeadProfile = () => {
   const { account } = useMetaMask();
 
   useEffect(() => {
-    if (account) {
+    async function callContract() {
       console.log("getting profile.....");
-      headProfileContract.getProfileInfo().then((result: any) => {
-        console.log(result);
-        if (result) {
-          setProfile({
-            userId: result[0],
-            address: account!,
-            displayName: result[2],
-            email: result[3],
-            isEmailVerified: result[4],
-          });
-        }
-      });
+      headProfileContract
+        .getProfileInfo()
+        .catch((error: any) => {
+          console.log(error);
+        })
+        .then((result: any) => {
+          console.log(result);
+          if (result) {
+            setProfile({
+              userId: result[0],
+              address: account!,
+              displayName: result[2],
+              email: result[3],
+              isEmailVerified: result[4],
+            });
+          }
+        });
+    }
+
+    if (account) {
+      callContract();
     }
   }, [account]);
 
