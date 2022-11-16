@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap"
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
 import { useState, useEffect } from "react";
 import { BigNumber } from "ethers";
@@ -51,17 +51,30 @@ export default function ProfilePage(){
     const renderCreateProfileForm = () => {
         return (
             <>
+                <Row className="d-flex justify-content-center align-items-center">
+                    <Col lg="8">
+                        <Card className='my-5 rounded-3'>
+                            <Card.Img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img3.webp" className="w-100 rounded-top"/>
+                            <Card.Body className="px-5">
+                            <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Create Profile</h3>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                         <Form.Label>Display Name</Form.Label>
                         <Form.Control type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}/>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
                         <Form.Label>Email</Form.Label>
                         <Form.Control type="email" value={email} onChange={(e)=> setEmail(e.target.value)}/>
                     </Form.Group>
-                    <Button type="submit">
-                        Create Profile
+                    <Button variant="primary" type="submit">
+                        Submit
                     </Button>
                 </Form>
+                </Card.Body>
+                </Card>
+                </Col>
+                </Row>
+            
             </>
         );
     }
@@ -71,14 +84,13 @@ export default function ProfilePage(){
 
  
     return (
-        <div>
-        <p>Profile Page</p>
-        {user.userId == 0 && renderCreateProfileForm()}
-        <p>{status}</p>
-        {user.userId != 0 && <p>{user!.displayName}</p>}
-        {loading && <p>Creating profile...</p>}
-        {success && <p>Profile created.</p>}
-        {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
-        </div>
+        <Container fluid>
+            {user.userId == 0 && renderCreateProfileForm()}
+            <p>{status}</p>
+            {user.userId != 0 && <p>{user!.displayName}</p>}
+            {loading && <p>Creating profile...</p>}
+            {success && <p>Profile created.</p>}
+            {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
+        </Container>
     )
 }
