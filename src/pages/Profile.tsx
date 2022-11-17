@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import { Button, Card, Col, Container, Form, Row, Spinner, Alert, Badge } from "react-bootstrap"
 import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
 import { useState, useEffect } from "react";
 import { BigNumber } from "ethers";
@@ -10,23 +10,22 @@ export default function ProfilePage(){
     const [status, setStatus] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [email , setEmail] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertShown, setAlertShown] = useState(false);
     
     const { account } = useMetaMask();
     //const { loading, success, error, send } = useCreateHeadProfile();
     const { send,loading, success, error } = useCreateHeadProfile(account!);
     const { user } = useGetHeadProfile();
 
-    // useEffect(()=>{
+    useEffect(()=>{
 
-    //     if(loading){
-    //         setStatus("loading...");
-    //     }
-        
-    //     if(success){
-    //         setStatus("Succeed.");
-    //     }
+        if(success && !showAlert && !alertShown){
+            setShowAlert(true);
+            setAlertShown(true);
+        }
 
-    // },[success, loading])
+    },[success])
     
     const handleSubmit = async (event:any) => {
         event.preventDefault();
@@ -51,32 +50,79 @@ export default function ProfilePage(){
     const renderCreateProfileForm = () => {
         return (
             <>
-                <Row className="d-flex justify-content-center align-items-center">
-                    <Col lg="8">
-                        <Card className='my-5 rounded-3'>
-                            <Card.Img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img3.webp" className="w-100 rounded-top"/>
-                            <Card.Body className="px-5">
-                            <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Create Profile</h3>
+                <p className="fs-1 text-center">Create Profile</p>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Display Name</Form.Label>
-                        <Form.Control type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)}/>
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="email" value={email} onChange={(e)=> setEmail(e.target.value)}/>
-                    </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
+                    <Row >
+                        <Col xs={2} className="text-end fw-bold">Name</Col>
+                      
+                        <Col>
+                            <Form.Group className="mb-3">
+                               <Form.Control type="text" value={displayName} placeholder="Joseph Lin" onChange={(e) => setDisplayName(e.target.value)}/>
+                            </Form.Group>    
+                        </Col>
+                        
+                    </Row>
+                    <Row>
+                        <Col xs={2} className="text-end fw-bold">Email</Col>
+                        <Col>
+                            <Form.Group className="mb-3">
+                                <Form.Control type="email" value={email} placeholder="joseph@example.com" onChange={(e)=> setEmail(e.target.value)}/>
+                            </Form.Group>
+                        </Col>
+                        
+                    </Row>
+                    <Row>
+                        <Col xs={2}></Col>
+                        <Col className="text-end">
+                            <Button variant="primary" type="submit">
+                                {loading && <div><Spinner  as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"/><span>Loading...</span></div>}
+
+                                {!loading && <span>Submit</span>}
+                            </Button>
+                        </Col>
+                        
+                    </Row>
                 </Form>
-                </Card.Body>
-                </Card>
-                </Col>
-                </Row>
-            
+                <Alert show={showAlert} variant="success">
+                    <Alert.Heading>Profile created!</Alert.Heading>
+                    <p>
+                        We've sent you a confirmation email which contains a verification code , 
+                        please use the code to verify your email address.
+                    </p>
+                    <hr/>
+                    <div className="d-flex justify-content-end">
+                        <Button onClick={() => {setShowAlert(false)}} variant="outline-success">
+                            OK
+                        </Button>
+                    </div>
+                </Alert>
             </>
         );
+    }
+
+    const renderProfile = () => {
+        return (
+            <>
+                <Row>
+                    <Col xs={4}></Col>
+                    <Col>
+                        <p className="fs-1 text-start">Your Profile</p>
+                        <p className="fs-3 text-start">{user!.displayName}</p>
+                        <p className="fs-3 text-start">{user!.email} {user!.isEmailVerified && <Badge bg="success">Success</Badge>}</p>
+                    </Col>
+                    <Col xs={4}></Col>
+                </Row>
+                <Row>
+                    <Col xs={4}></Col>
+                    <Col className="text-start">{!user!.isEmailVerified && <Button>Verify Your Email</Button>}</Col>
+                    <Col xs={4}></Col>
+                </Row>
+            </>
+        )
     }
 
     
@@ -84,13 +130,14 @@ export default function ProfilePage(){
 
  
     return (
-        <Container fluid>
+        <div className="App">
+        <Container fluid="md">
             {user.userId == 0 && renderCreateProfileForm()}
             <p>{status}</p>
-            {user.userId != 0 && <p>{user!.displayName}</p>}
-            {loading && <p>Creating profile...</p>}
+            {user.userId != 0 && renderProfile()}
             {success && <p>Profile created.</p>}
             {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
         </Container>
+        </div>
     )
 }
