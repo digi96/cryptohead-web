@@ -6,26 +6,42 @@ import { useMetaMask } from 'metamask-react';
 import { bindActionCreators } from "redux";
 
 
+enum profileStatus {
+    empty,
+    justCreated,
+    exists
+}
+
+
 export default function ProfilePage(){
     const [status, setStatus] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [email , setEmail] = useState("");
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertShown, setAlertShown] = useState(false);
-    
+    const [verificationCode, setVerificationCode] = useState("");
+    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [userProfileStatus, setUserProfileStatus] = useState<profileStatus>(profileStatus.empty);
     const { account } = useMetaMask();
     //const { loading, success, error, send } = useCreateHeadProfile();
-    const { send,loading, success, error } = useCreateHeadProfile(account!);
+    const { send, loading, success: createSuccess, error } = useCreateHeadProfile(account!);
     const { user } = useGetHeadProfile();
 
     useEffect(()=>{
 
-        if(success && !showAlert && !alertShown){
-            setShowAlert(true);
-            setAlertShown(true);
+        if(user.userId!=0){
+            setUserProfileStatus(profileStatus.exists);
         }
 
-    },[success])
+        if(user.userId==0){
+            setUserProfileStatus(profileStatus.empty);
+        }
+
+
+        if(createSuccess){
+            console.log('create success...')
+            setUserProfileStatus(profileStatus.justCreated);
+        }
+
+    },[createSuccess, user])
     
     const handleSubmit = async (event:any) => {
         event.preventDefault();
@@ -42,12 +58,16 @@ export default function ProfilePage(){
           };
         // await send([BigNumber.from(0),
         //     1,account,"Bevis Lin","bevis.tw@gmail.com",false,BigNumber.from("1655445559"),0]);
-        send(profile);
+        send(profile).then(()=>{
+            if(createSuccess){
+                setShowAlert(true);
+            }
+        });
 
     }
 
 
-    const renderCreateProfileForm = () => {
+    function CreateProfileForm () {
         return (
             <>
                 <p className="fs-1 text-center">Create Profile</p>
@@ -87,55 +107,83 @@ export default function ProfilePage(){
                         
                     </Row>
                 </Form>
-                <Alert show={showAlert} variant="success">
-                    <Alert.Heading>Profile created!</Alert.Heading>
-                    <p>
-                        We've sent you a confirmation email which contains a verification code , 
-                        please use the code to verify your email address.
-                    </p>
-                    <hr/>
-                    <div className="d-flex justify-content-end">
-                        <Button onClick={() => {setShowAlert(false)}} variant="outline-success">
-                            OK
-                        </Button>
-                    </div>
-                </Alert>
+                
             </>
         );
     }
 
-    const renderProfile = () => {
+    function ProfileInfo () {
         return (
             <>
+                <p className="fs-1 text-center">Your Profile</p>
                 <Row>
-                    <Col xs={4}></Col>
-                    <Col>
-                        <p className="fs-1 text-start">Your Profile</p>
-                        <p className="fs-3 text-start">{user!.displayName}</p>
-                        <p className="fs-3 text-start">{user!.email} {user!.isEmailVerified && <Badge bg="success">Success</Badge>}</p>
-                    </Col>
-                    <Col xs={4}></Col>
+                    <Col xs={2} className="text-end fw-bold">Display Name</Col>
+                    <Col className="mb-3 text-start">{user!.displayName}</Col>
                 </Row>
                 <Row>
-                    <Col xs={4}></Col>
-                    <Col className="text-start">{!user!.isEmailVerified && <Button>Verify Your Email</Button>}</Col>
-                    <Col xs={4}></Col>
+                    <Col xs={2} className="text-end fw-bold">Email</Col>
+                    <Col className="mb-3 text-start">{user!.email} {user!.isEmailVerified && <Badge bg="success">Success</Badge>}</Col>
                 </Row>
+                {!user!.isEmailVerified && <VerificationForm/>}
             </>
         )
     }
 
+    function VerificationForm() {
+        return(
+        <>
+            <Form>
+            <Row>
+                <Col xs={2} className="text-end fw-bold">Verification Code</Col>
+                <Col>
+                    <Form.Group className="mb-3">
+                        <Form.Control type="text" value={verificationCode} placeholder="123456"
+                        onChange={(e)=>{setVerificationCode(e.target.value)}}></Form.Control>
+                    </Form.Group>
+                </Col>
+            </Row>
+            <Row>
+                <Col xs={2}></Col>
+                <Col className="text-end">
+                    <Button variant="primary" type="submit">
+                        Verify
+                    </Button>
+                </Col>
+            </Row>
+            </Form>
+        </>);
+    }
+
+    function ProfileCreatedAlert() {
+        return (
+            <>
+                <Alert show={showAlert} variant="success">
+                    <Alert.Heading>Your profile has been created!</Alert.Heading>
+                </Alert>
+            </>
+        )
+    }
+
+   
     
+    const renderContent = () => {
+        if(userProfileStatus == profileStatus.empty){
+            return <CreateProfileForm/>
+        }else if(userProfileStatus == profileStatus.justCreated){
+            return (<div><ProfileCreatedAlert/><ProfileInfo/></div>)
+        }else if(userProfileStatus == profileStatus.exists){
+            return <ProfileInfo/>
+        }    
+    }
+   
 
 
  
     return (
         <div className="App">
         <Container fluid="md">
-            {user.userId == 0 && renderCreateProfileForm()}
             <p>{status}</p>
-            {user.userId != 0 && renderProfile()}
-            {success && <p>Profile created.</p>}
+            {renderContent()}
             {error && <div><p>Something went wrong..</p><p>{error}</p></div>}
         </Container>
         </div>
