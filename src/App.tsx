@@ -6,6 +6,7 @@ import HomePage from './pages/Home';
 import AboutPage from './pages/About';
 import ProfilePage from './pages/Profile';
 import Sign from './pages/Sign';
+import CreateProfilePage from './pages/CreateProfile';
 
 function App() {
 
@@ -19,7 +20,10 @@ function App() {
             <Route path=":number" element={<AboutPage/>}/>
           </Route>
           <Route path="/sign" element={<Sign/>}/>
-          <Route path="/profile" element={<ProfilePage/>}/>
+          <Route path="profile">
+            <Route index element={<ProfilePage/>}/>
+            <Route path="create" element={<CreateProfilePage/>} />
+          </Route>
         </Routes>
     </div>
   );
