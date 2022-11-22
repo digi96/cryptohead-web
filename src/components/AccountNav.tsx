@@ -16,7 +16,7 @@ export default function AccountNav() {
 
     useEffect(()=>{
         if(account){
-            console.log(user);
+            //console.log(user);
             if(user.userId == 0 || user.address !=account){
                 getProfileFromContract();
             }

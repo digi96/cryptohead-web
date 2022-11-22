@@ -19,16 +19,47 @@ export default function ProfilePage(){
     const renderProfile = () => {
         return (
             <>
-                <p className="fs-1 text-center">Your Profile</p>
                 <Row>
-                    <Col xs={2} className="text-end fw-bold">Display Name</Col>
-                    <Col className="mb-3 text-start">{user!.displayName}</Col>
+                    <Col className="mt-5"><p className="fs-2 text-dark bg-light">Your Profile</p></Col>
+                    
                 </Row>
                 <Row>
-                    <Col xs={2} className="text-end fw-bold">Email</Col>
-                    <Col className="mb-3 text-start">{user!.email} {user!.isEmailVerified && <Badge bg="success">Success</Badge>}</Col>
+                    <Col xs={2}></Col>
+                    <Col className="mt-3 text-start fw-bold">{user!.displayName}</Col>
+                    <Col xs={2}></Col>
                 </Row>
-                {!user!.isEmailVerified && <Button>Go to verify</Button>}
+                <Row>
+                    <Col xs={2}></Col>
+                    <Col className="mt-3 text-start fw-bold">{user!.email} {user!.isEmailVerified && <Badge bg="success">Verified</Badge>}</Col>
+                    <Col xs={2}></Col>
+                </Row>
+                <Row>
+                    <Col xs={12} lg={12} className="mt-5">
+                        <div className="d-grid gap-2">
+                        {!user!.isEmailVerified && <Button size="lg" onClick={()=> history("verify")}>Go to verify</Button>}
+                        </div>
+                    </Col>
+                    
+                </Row>
+                
+            </>
+        )
+    }
+
+    const renderGoToCreate = () => {
+        return (
+            <>
+                <Row><Col lg={12} xs={12} className="mt-5"></Col></Row>
+                <Row>
+                    <Col lg={12} xs={12} >
+                        <Alert key="info" variant="info">
+                            You haven't created your profile.
+                            Click <Alert.Link href="#" onClick={()=>history("create")}>here</Alert.Link> to create a new one
+                        </Alert></Col>
+                </Row>
+                <Row>
+                     <Col lg={12} xs={12} className="text-start">Why should I create a profile?</Col>
+                </Row>
             </>
         )
     }
@@ -38,7 +69,7 @@ export default function ProfilePage(){
             <div className="App">
             <Container fluid="md">
                 {user!.userId!=0 && renderProfile()}
-                {user!.userId==0 && <Button onClick={()=>history("create") } >Create Profile</Button>}
+                {user!.userId==0 && renderGoToCreate()}
             </Container>
             </div>
         </>

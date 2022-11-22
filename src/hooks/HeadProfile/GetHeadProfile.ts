@@ -21,7 +21,7 @@ export const useGetHeadProfile = () => {
   }, [account]);
 
   const retrieveData = async () => {
-    console.log("getting profile.....");
+    //console.log("getting profile.....");
     headProfileContract
       .getProfileInfo()
       .catch((error: any) => {
@@ -37,7 +37,7 @@ export const useGetHeadProfile = () => {
         updateUser(initialProfile);
       })
       .then((result: any) => {
-        console.log(result);
+        //console.log(result);
         if (result) {
           let tempProfile: HeadProfile = {
             userId: result[0].toNumber(),

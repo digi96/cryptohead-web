@@ -28,7 +28,7 @@ export default function CreateProfilePage() {
         emailVerifyNumber: 0,
       };
     send(profile).then(()=>{
-        console.log("create complete...")
+        console.log("create complete...");
         
     });
 
@@ -85,9 +85,9 @@ export default function CreateProfilePage() {
       <div className="App">
       <Container fluid="md">
           {user!.userId==0 && renderProfileCreationForm()}
-          <Alert show={success} variant="success">
+          <Alert show={success} variant="success" className="mt-5">
             <Alert.Heading>Your profile has been created!</Alert.Heading>
-            <Button>verify your email</Button>
+            <Button className="mt-3">verify your email</Button>
           </Alert>
       </Container>
       </div>

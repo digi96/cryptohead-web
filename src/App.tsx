@@ -7,6 +7,7 @@ import AboutPage from './pages/About';
 import ProfilePage from './pages/Profile';
 import Sign from './pages/Sign';
 import CreateProfilePage from './pages/CreateProfile';
+import EmailVerificationPage from './pages/EmailVerification';
 
 function App() {
 
@@ -22,7 +23,8 @@ function App() {
           <Route path="/sign" element={<Sign/>}/>
           <Route path="profile">
             <Route index element={<ProfilePage/>}/>
-            <Route path="create" element={<CreateProfilePage/>} />
+            <Route path="create" element={<CreateProfilePage/>}/>
+            <Route path="verify" element={<EmailVerificationPage/>}/>
           </Route>
         </Routes>
     </div>
