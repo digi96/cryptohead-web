@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { useState } from "react";
 import { headProfileContract } from "..";
 import { useDispatch } from "react-redux";

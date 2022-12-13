@@ -1,9 +1,8 @@
-import { Button, Card, Col, Container, Form, Row, Spinner, Alert, Badge } from "react-bootstrap"
+import { Button, Col, Container, Form, Row, Spinner, Alert } from "react-bootstrap"
 import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
-import { useState, useEffect } from "react";
-import { BigNumber } from "ethers";
+import { useState } from "react";
 import { useMetaMask } from 'metamask-react';
-import { bindActionCreators } from "redux";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CreateProfilePage() {
@@ -12,7 +11,7 @@ export default function CreateProfilePage() {
   const { account } = useMetaMask();
   const { send, loading, success , error } = useCreateHeadProfile(account!);
   const { user } = useGetHeadProfile();
-
+  const history = useNavigate();
   
   const handleSubmit = async (event:any) => {
     event.preventDefault();
@@ -84,10 +83,10 @@ export default function CreateProfilePage() {
     <>
       <div className="App">
       <Container fluid="md">
-          {user!.userId==0 && renderProfileCreationForm()}
+          {user!.userId===0 && renderProfileCreationForm()}
           <Alert show={success} variant="success" className="mt-5">
             <Alert.Heading>Your profile has been created!</Alert.Heading>
-            <Button className="mt-3">verify your email</Button>
+            <Button className="mt-3" onClick={()=> history('/profile/verify')}>verify your email</Button>
           </Alert>
       </Container>
       </div>

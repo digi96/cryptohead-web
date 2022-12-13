@@ -36,3 +36,12 @@ interface HeadProfileCreation {
   lastUpdate: string;
   emailVerifyNumber: number;
 }
+
+interface HeadTemplate {
+  templateId: number;
+  title: string;
+  description: string;
+  quantity: number;
+  issued: number;
+  owner: string;
+}
