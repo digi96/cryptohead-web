@@ -7,25 +7,61 @@ export const useGetHeadTemplate = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<any>();
   const { account } = useMetaMask();
-  const [templateQuantity, setTemplateQuantity] = useState<Number>(0);
+  const [templateQuantity, setTemplateQuantity] = useState<number>(0);
   const [templates, setTemplates] = useState<HeadTemplate[]>();
 
   useEffect(() => {
-    if (templateQuantity > 0) {
-      //loop to get all templates
+
+    const getAllTemplates = async () => {
+      let tempTemplates: HeadTemplate[] = [];
+        for(let i=0; i<=templateQuantity-1; i++){
+            await headTemplateContract.userTemplates(account, i)
+              .then((result: any) => {
+                let newTemplate: HeadTemplate = {
+                  templateId: result[0].toNumber(),
+                  title: result[1],
+                  description: result[2],
+                  quantity: result[3].toNumber(),
+                  issued: result[4].toNumber(),
+                  owner: result[5]
+                }
+                tempTemplates.push(newTemplate);
+              })
+        }
+        setTemplates(tempTemplates);  
+        setLoading(false);
+        setSuccess(true);
     }
+
+
+    if (templateQuantity > 0) {
+     setLoading(true);
+      getAllTemplates().catch((error: any) => {
+        console.log(error);
+        setError(error);
+        setLoading(false);
+        setSuccess(false);
+      });
+    }
+
   }, [templateQuantity]);
 
+  
+
   const retrieveData = async () => {
+    setLoading(true);
     headTemplateContract
       .getUserTemplatesCount()
       .catch((error: any) => {
         console.log(error);
+        setError(error);
+        setLoading(false);
       })
       .then((result: any) => {
         if (result) {
           console.log(result[0].toNumber());
           setTemplateQuantity(result[0].toNumber());
+          setLoading(false);
         }
       });
   };
