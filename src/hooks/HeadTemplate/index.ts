@@ -1,0 +1,1 @@
+export { useGetHeadTemplate } from "./GetHeadTemplates";

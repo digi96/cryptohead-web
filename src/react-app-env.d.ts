@@ -4,6 +4,7 @@ declare namespace NodeJS {
   interface ProcessEnv {
     NODE_ENV: "development" | "production" | "test";
     APP_CONTRACT_HEADPROFILE_ADDRESS: string;
+    APP_CONTRACT_HEADTEMPLATE_ADDRESS: string;
   }
 }
 

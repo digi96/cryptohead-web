@@ -7,6 +7,7 @@ import env from "ts-react-dotenv";
 export const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 export const headProfileABI = new Interface(headProfileAbi);
+console.log(env.APP_CONTRACT_HEADPROFILE_ADDRESS);
 export const headProfileContract = new Contract(
   env.APP_CONTRACT_HEADPROFILE_ADDRESS,
   headProfileABI,
@@ -14,6 +15,7 @@ export const headProfileContract = new Contract(
 );
 
 export const headTemplateABI = new Interface(headTemplateAbi);
+console.log(env.APP_CONTRACT_HEADTEMPLATE_ADDRESS);
 export const headTemplateContract = new Contract(
   env.APP_CONTRACT_HEADTEMPLATE_ADDRESS,
   headTemplateABI,

@@ -11,31 +11,30 @@ export const useGetHeadTemplate = () => {
   const [templates, setTemplates] = useState<HeadTemplate[]>();
 
   useEffect(() => {
-
     const getAllTemplates = async () => {
       let tempTemplates: HeadTemplate[] = [];
-        for(let i=0; i<=templateQuantity-1; i++){
-            await headTemplateContract.userTemplates(account, i)
-              .then((result: any) => {
-                let newTemplate: HeadTemplate = {
-                  templateId: result[0].toNumber(),
-                  title: result[1],
-                  description: result[2],
-                  quantity: result[3].toNumber(),
-                  issued: result[4].toNumber(),
-                  owner: result[5]
-                }
-                tempTemplates.push(newTemplate);
-              })
-        }
-        setTemplates(tempTemplates);  
-        setLoading(false);
-        setSuccess(true);
-    }
+      for (let i = 0; i <= templateQuantity - 1; i++) {
+        await headTemplateContract
+          .userTemplates(account, i)
+          .then((result: any) => {
+            let newTemplate: HeadTemplate = {
+              templateId: result[0].toNumber(),
+              title: result[1],
+              description: result[2],
+              quantity: result[3].toNumber(),
+              issued: result[4].toNumber(),
+              owner: result[5],
+            };
+            tempTemplates.push(newTemplate);
+          });
+      }
+      setTemplates(tempTemplates);
+      setLoading(false);
+      setSuccess(true);
+    };
 
-
-    if (templateQuantity > 0) {
-     setLoading(true);
+    if (account && templateQuantity > 0) {
+      setLoading(true);
       getAllTemplates().catch((error: any) => {
         console.log(error);
         setError(error);
@@ -43,15 +42,17 @@ export const useGetHeadTemplate = () => {
         setSuccess(false);
       });
     }
-
   }, [templateQuantity]);
 
-  
-
   const retrieveData = async () => {
+    if (!account) {
+      console.log("no account...");
+      return;
+    }
     setLoading(true);
+    console.log(account);
     headTemplateContract
-      .getUserTemplatesCount()
+      .getUserTemplatesCount(account)
       .catch((error: any) => {
         console.log(error);
         setError(error);
@@ -59,8 +60,9 @@ export const useGetHeadTemplate = () => {
       })
       .then((result: any) => {
         if (result) {
-          console.log(result[0].toNumber());
-          setTemplateQuantity(result[0].toNumber());
+          console.log(result);
+          console.log(result.toNumber());
+          setTemplateQuantity(result.toNumber());
           setLoading(false);
         }
       });
@@ -71,5 +73,6 @@ export const useGetHeadTemplate = () => {
     success,
     error,
     retrieveData,
+    templates,
   };
 };

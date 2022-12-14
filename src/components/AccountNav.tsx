@@ -79,7 +79,7 @@ export default function AccountNav() {
                         <NavDropdown.Item href="#action/3.4">
                             My Cards
                         </NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.4">
+                        <NavDropdown.Item href="/templates">
                             My Tempates
                         </NavDropdown.Item>
                         <NavDropdown.Divider />
