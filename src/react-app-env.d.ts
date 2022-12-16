@@ -42,6 +42,7 @@ interface HeadTemplate {
   templateId: number;
   title: string;
   description: string;
+  imageURL: string;
   quantity: number;
   issued: number;
   owner: string;

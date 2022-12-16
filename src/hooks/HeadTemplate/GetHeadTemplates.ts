@@ -21,9 +21,10 @@ export const useGetHeadTemplate = () => {
               templateId: result[0].toNumber(),
               title: result[1],
               description: result[2],
-              quantity: result[3].toNumber(),
-              issued: result[4].toNumber(),
-              owner: result[5],
+              imageURL: result[3],
+              quantity: result[4].toNumber(),
+              issued: result[6].toNumber(),
+              owner: result[7],
             };
             tempTemplates.push(newTemplate);
           });

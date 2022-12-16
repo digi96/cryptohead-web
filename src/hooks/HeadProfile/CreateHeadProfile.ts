@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import { actionCreators, State } from "../../state";
 import { useGetHeadProfile } from "./GetHeadProfile";
 
-export const useCreateHeadProfile = (address: string) => {
+export const useCreateHeadProfile = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<any>();

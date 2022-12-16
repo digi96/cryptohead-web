@@ -1,5 +1,5 @@
-import { Button, Col, Container, Form, Row, Spinner, Alert } from "react-bootstrap"
-import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile"
+import { Button, Col, Container, Form, Row, Spinner, Alert } from "react-bootstrap";
+import { useCreateHeadProfile, useGetHeadProfile } from "../hooks/HeadProfile";
 import { useState } from "react";
 import { useMetaMask } from 'metamask-react';
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,7 @@ export default function CreateProfilePage() {
   const [displayName, setDisplayName] = useState("");
   const [email , setEmail] = useState("");
   const { account } = useMetaMask();
-  const { send, loading, success , error } = useCreateHeadProfile(account!);
+  const { send, loading, success , error } = useCreateHeadProfile();
   const { user } = useGetHeadProfile();
   const history = useNavigate();
   
@@ -27,7 +27,7 @@ export default function CreateProfilePage() {
         emailVerifyNumber: 0,
       };
     send(profile).then(()=>{
-        console.log("create complete...");
+        console.log("create profile complete...");
         
     });
 

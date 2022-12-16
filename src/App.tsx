@@ -8,7 +8,8 @@ import ProfilePage from './pages/Profile';
 import Sign from './pages/Sign';
 import CreateProfilePage from './pages/CreateProfile';
 import EmailVerificationPage from './pages/EmailVerification';
-import MyTemplates from './pages/MyTemplates';
+import MyTemplatesPage from './pages/MyTemplates';
+import CreateTemplatePage from './pages/CreateTemplate';
 
 function App() {
 
@@ -21,7 +22,10 @@ function App() {
             <Route index element={<AboutPage/>}/>
             <Route path=":number" element={<AboutPage/>}/>
           </Route>
-          <Route path="/templates" element={<MyTemplates/>}/>
+          <Route path="templates">
+            <Route index element={<MyTemplatesPage/>}/>
+            <Route path="create" element={<CreateTemplatePage/>}/>
+          </Route>
           <Route path="/sign" element={<Sign/>}/>
           <Route path="profile">
             <Route index element={<ProfilePage/>}/>
